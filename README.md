@@ -1,6 +1,6 @@
-gls - Distributed ls
+# gls - Distributed ls
 
-# Build
+## Build
 
 Create the `/src/github.com/kelseyhightower` directory and clone the gls repo under it:
 
@@ -16,16 +16,16 @@ Run the build script:
 $ ./build
 ```
 
-# Usage
+## Usage
 
-## Server
+### Server
 
 ```
 $ sudo glsd
 ```
 
-## Client
+### Client
 
 ```
-$ gls --hostsfile=hosts.txt "/"
+$ gls /
 ```
