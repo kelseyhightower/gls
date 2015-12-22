@@ -1,0 +1,4 @@
+#!/bin/bash
+
+go build -o gls client/main.go
+go build -o glsd server/main.go

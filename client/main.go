@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/rpc"
+	"os"
+	"path/filepath"
 
 	"github.com/kelseyhightower/gls"
 )
@@ -18,10 +20,14 @@ var (
 	tlsKey    string
 )
 
+func homedir() string {
+	return os.Getenv("HOME")
+}
+
 func init() {
-	flag.StringVar(&tlsCACert, "tlscacert", "", "path to TLS CA cert")
-	flag.StringVar(&tlsCert, "tlscert", "", "path to TLS cert")
-	flag.StringVar(&tlsKey, "tlskey", "", "path to TLS key")
+	flag.StringVar(&tlsCACert, "tlscacert", filepath.Join(homedir(), ".gls/ca.pem"), "path to TLS CA cert")
+	flag.StringVar(&tlsCert, "tlscert", filepath.Join(homedir(), ".gls/cert.pem"), "path to TLS cert")
+	flag.StringVar(&tlsKey, "tlskey", filepath.Join(homedir(), ".gls/key.pem"), "path to TLS key")
 }
 
 func main() {
