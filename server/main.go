@@ -1,33 +1,15 @@
 package main
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"flag"
-	"io/ioutil"
 	"log"
+	"net"
 	"net/rpc"
 	"os"
 	"path/filepath"
 
 	"github.com/kelseyhightower/gls"
 )
-
-var (
-	tlsCACert string
-	tlsCert   string
-	tlsKey    string
-)
-
-func tlsPath(dir, file string) string {
-	return filepath.Join(os.Getenv("HOME"), dir, file)
-}
-
-func init() {
-	flag.StringVar(&tlsCACert, "tlscacert", tlsPath(".glsd", "ca.pem"), "path to TLS CA cert")
-	flag.StringVar(&tlsCert, "tlscert", tlsPath(".glsd", "cert.pem"), "path to TLS cert")
-	flag.StringVar(&tlsKey, "tlskey", tlsPath(".glsd", "key.pem"), "path to TLS key")
-}
 
 type Ls struct{}
 
@@ -63,26 +45,7 @@ func main() {
 	ls := new(Ls)
 	rpc.Register(ls)
 
-	caCert, err := ioutil.ReadFile(tlsCACert)
-	if err != nil {
-		log.Fatal(err)
-	}
-	caCertPool := x509.NewCertPool()
-	caCertPool.AppendCertsFromPEM(caCert)
-
-	serverCert, err := tls.LoadX509KeyPair(tlsCert, tlsKey)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{serverCert},
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		ClientCAs:    caCertPool,
-	}
-	tlsConfig.BuildNameToCertificate()
-
-	l, err := tls.Listen("tcp", "0.0.0.0:8080", tlsConfig)
+	l, err := net.Listen("tcp", "0.0.0.0:8080")
 	if err != nil {
 		log.Fatal(err)
 	}
