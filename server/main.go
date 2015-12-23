@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net"
 	"net/rpc"
@@ -39,17 +38,13 @@ func (ls *Ls) Ls(path *string, files *gls.Files) error {
 }
 
 func main() {
-	flag.Parse()
 	log.Println("Starting glsd..")
-
 	ls := new(Ls)
 	rpc.Register(ls)
-
 	l, err := net.Listen("tcp", "0.0.0.0:8080")
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	for {
 		conn, err := l.Accept()
 		if err != nil {
